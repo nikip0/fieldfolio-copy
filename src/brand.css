@@ -8,11 +8,24 @@
   --brand-green: #23412a;
   --brand-yellow: #f3c96b;
   --brand-bg: #f9f6ee;
+  --header-bg: #ffffff;
+  --header-text: #23412a;
+  --header-tagline: #6b7280;
+}
+
+/* Dark mode brand colors */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-bg: #0f172a;
+    --header-bg: #1e293b;
+    --header-text: #f8fafc;
+    --header-tagline: #cbd5e1;
+  }
 }
 
 body {
   background: var(--brand-bg);
-  color: var(--brand-green);
+  color: var(--header-text);
   font-family: 'Inter', sans-serif;
 }
 
