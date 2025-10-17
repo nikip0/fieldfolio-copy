@@ -546,6 +546,9 @@ const PlantProfitDashboard = () => {
             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
               <CloudRain className="text-blue-500" /> Current Weather Conditions
             </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16, lineHeight: 1.5 }}>
+              Real-time weather data helps assess current growing conditions and risk factors. This information influences crop stress levels, irrigation needs, and timing decisions for planting and harvesting.
+            </p>
             <div className="small-grid-3">
               <div className="metric">
                 <div className="label">Last 90 Days Rainfall</div>
@@ -569,6 +572,9 @@ const PlantProfitDashboard = () => {
             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
               🤖 AI Annual Weather Forecast (2025 Growing Season)
             </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16, lineHeight: 1.5 }}>
+              Machine learning models predict seasonal weather patterns to optimize crop selection and timing. These forecasts help farmers plan irrigation, select drought-resistant varieties, and manage climate risks.
+            </p>
             <div className="alert alert-success" style={{ marginBottom: 12 }}>
               <strong>AI Prediction Confidence: {(annualWeatherPrediction.aiConfidence * 100).toFixed(0)}%</strong>
               <div style={{ fontSize: 13, marginTop: 4 }}>
@@ -600,6 +606,9 @@ const PlantProfitDashboard = () => {
             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
               🌍 Climate Change Projections (20-Year Outlook)
             </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16, lineHeight: 1.5 }}>
+              Long-term climate forecasts for perennial investments like orchards and vineyards. These projections help evaluate the viability of multi-decade crop investments and guide variety selection for future conditions.
+            </p>
             <div className="alert alert-warning" style={{ marginBottom: 12 }}>
               <strong>Based on IPCC Climate Models</strong> - Moderate scenario (RCP4.5) for Central Valley, CA
             </div>
@@ -659,6 +668,9 @@ const PlantProfitDashboard = () => {
           <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-primary)' }}>
             <Settings style={{ color: 'var(--text-secondary)' }} /> Scenario Planning
           </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16, lineHeight: 1.5 }}>
+            Interactive sliders to model different market and weather conditions. Adjust these parameters to see how price volatility, input costs, and climate variations affect crop profitability and risk scores in real-time.
+          </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
             <div>
               <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)' }}>Price Change: {priceScenario > 0 ? '+' : ''}{priceScenario}%</label>
@@ -802,6 +814,14 @@ const PlantProfitDashboard = () => {
 
         {/* AI Advisor onboarding & chat */}
         <div style={{ marginTop: 16 }}>
+          <div className="card" style={{ marginBottom: 16 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+              🤖 AI Farm Advisor
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 0, lineHeight: 1.5 }}>
+              Build custom farm models and get AI-powered insights. Create detailed financial projections, optimize crop allocation, and ask questions about farming strategies to maximize profitability.
+            </p>
+          </div>
           <AIAdvisor />
         </div>
 
@@ -810,6 +830,9 @@ const PlantProfitDashboard = () => {
           <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
             <DollarSign className="text-green-500" /> Carbon Credit Calculator
           </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16, lineHeight: 1.5 }}>
+            Calculate potential carbon credit revenue from sustainable farming practices. This tool estimates carbon sequestration benefits and additional income streams from regenerative agriculture and carbon offset programs.
+          </p>
           <CarbonCreditCalculator />
         </div>
 
