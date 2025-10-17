@@ -34,6 +34,7 @@ const PlantProfitDashboard = () => {
   const [loadingModel, setLoadingModel] = useState(false);
   const [modelError, setModelError] = useState(null);
   const [healthStatus, setHealthStatus] = useState(null);
+  const [optResult, setOptResult] = useState(null);
 
   const FRESNO_LAT = 36.7378;
   const FRESNO_LON = -119.7871;
@@ -318,6 +319,27 @@ const PlantProfitDashboard = () => {
     }
   };
 
+  const optimizePlan = async () => {
+    if (!model) return alert('Build the farm model first');
+    setOptResult(null);
+    try {
+      const res = await fetch('/api/optimize', {
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ model, acres: Number(acres), budget: Number(budget) })
+      });
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(`Optimize failed (${res.status}): ${txt}`);
+      }
+      const data = await res.json();
+      setOptResult(data);
+    } catch (err) {
+      console.error('optimizePlan error', err);
+      setOptResult({ error: err.message || String(err) });
+    }
+  };
+
   useEffect(() => {
     fetchWeatherData();
     setCropData(cropMode === 'annual' ? annualCropData : perennialCropData);
@@ -385,55 +407,103 @@ const PlantProfitDashboard = () => {
       breakEven = (crop.establishmentCost / profit).toFixed(1);
     }
 
-    // Enhanced risk score with AI weather predictions and dynamic scenarios
+    // Realistic agricultural risk assessment with proper distribution
     let riskScore;
     
-    // Start with base risk from crop characteristics
-    let totalRisk = crop.priceVolatility * 30; // Increased for better differentiation
+    // 1. Base market volatility risk (0-25 points)
+    let marketRisk = crop.priceVolatility * 100; // 15-25% → 15-25 points
     
-    // Add crop type specific base risk
+    // 2. Crop-specific inherent risks (0-20 points)
+    let cropRisk = 0;
     if (crop.type === 'perennial') {
-      totalRisk += 10; // Perennials have inherent long-term risks
+      // Perennials: higher establishment risk, weather sensitivity over decades
+      cropRisk = 15;
+      if (crop.name.includes('Almonds')) cropRisk += 3; // Water intensive
+      if (crop.name.includes('Grapes')) cropRisk += 2; // Disease/pest pressure
+      if (crop.name.includes('Pistachios')) cropRisk += 1; // Alternate bearing
     } else {
-      totalRisk += 5; // Annuals have shorter-term risks
+      // Annuals: variable by crop type
+      cropRisk = 8;
+      if (crop.name.includes('Tomatoes')) cropRisk += 4; // Disease prone, processing contracts
+      if (crop.name.includes('Cotton')) cropRisk += 6; // Weather sensitive, pest pressure
+      if (crop.name.includes('Corn')) cropRisk += 2; // Relatively stable
     }
     
-    // Add scenario-based risks (major impact)
-    totalRisk += Math.abs(priceScenario) * 0.8; // Price volatility risk
-    totalRisk += Math.abs(costScenario) * 0.6; // Cost increase risk
-    totalRisk += Math.abs(rainfallScenario) * 0.7; // Weather risk
+    // 3. Weather and climate risk (0-25 points)
+    let weatherRisk = 0;
     
-    // Add AI weather risk factors
+    // Current weather impact
+    if (weatherData) {
+      const rainfallAnom = parseFloat(weatherData.rainfallAnomaly);
+      weatherRisk += Math.abs(rainfallAnom) / 8; // ±40% rainfall = 5 points
+      
+      // Temperature stress (based on crop-specific sensitivity)
+      const tempStress = Math.abs(parseFloat(weatherData.avgTemp) - 70) / 4; // Deviation from 70°F
+      weatherRisk += tempStress;
+    }
+    
+    // AI weather predictions
     if (crop.type === 'annual' && annualWeatherPrediction) {
-      totalRisk += annualWeatherPrediction.climateRisk * 12;
-      if (annualWeatherPrediction.prediction === 'drought-likely') totalRisk += 15;
-      if (annualWeatherPrediction.prediction === 'wet-season') totalRisk += 10;
-    } else if (crop.type === 'perennial' && climateProjections) {
-      const futureRisk = climateProjections[2]; // 2040 projection
-      if (futureRisk) {
-        totalRisk += parseFloat(futureRisk.extremeWeatherRisk) * 0.3;
+      weatherRisk += annualWeatherPrediction.climateRisk * 15; // 0-15 additional points
+      if (annualWeatherPrediction.prediction === 'drought-likely') weatherRisk += 8;
+      if (annualWeatherPrediction.prediction === 'extreme-heat') weatherRisk += 6;
+      if (annualWeatherPrediction.prediction === 'wet-season') weatherRisk += 4;
+    }
+    
+    // Long-term climate projections for perennials
+    if (crop.type === 'perennial' && climateProjections) {
+      const midTermProjection = climateProjections[1]; // 2030 projection
+      const longTermProjection = climateProjections[2]; // 2040 projection
+      
+      if (midTermProjection) {
+        weatherRisk += parseFloat(midTermProjection.extremeWeatherRisk) * 0.2;
+        weatherRisk += parseFloat(midTermProjection.droughtRisk) * 0.15;
       }
-      // Perennials have additional climate change risk over their long lifespan
-      totalRisk += 8;
+      if (longTermProjection) {
+        weatherRisk += parseFloat(longTermProjection.extremeWeatherRisk) * 0.15;
+      }
     }
     
-    // Apply profit-based modulation with better ranges
+    // 4. Economic scenario risks (0-20 points)
+    let economicRisk = 0;
+    economicRisk += Math.abs(priceScenario) * 0.4; // Price volatility
+    economicRisk += Math.abs(costScenario) * 0.3; // Input cost changes
+    economicRisk += Math.abs(rainfallScenario) * 0.25; // Weather economic impact
+    
+    // 5. Profitability risk adjustment (0-15 points)
+    let profitabilityRisk = 0;
     if (profit < 0) {
-      // Negative profit = very high risk (60-95)
-      riskScore = Math.min(95, 60 + totalRisk * 0.8 + Math.abs(profit) / 80);
-    } else if (profit < 1000) {
-      // Low-medium profit = moderate risk (25-65)
-      riskScore = Math.min(65, 25 + totalRisk * 0.6 + (1000 - profit) / 40);
+      profitabilityRisk = 15; // Maximum risk for losses
+    } else if (profit < 500) {
+      profitabilityRisk = 12; // High risk for low margins
+    } else if (profit < 1500) {
+      profitabilityRisk = 8; // Moderate risk
+    } else if (profit < 3000) {
+      profitabilityRisk = 4; // Lower risk
     } else {
-      // Good profit = low-moderate risk (15-50)
-      riskScore = Math.min(50, 15 + totalRisk * 0.4);
+      profitabilityRisk = 2; // Minimal risk for high profits
     }
     
-    // Ensure minimum and maximum bounds
-    riskScore = Math.max(10, Math.min(95, riskScore));
+    // Calculate total risk (0-105 possible, but we'll scale to 0-100)
+    const totalRiskPoints = marketRisk + cropRisk + weatherRisk + economicRisk + profitabilityRisk;
     
-    // Debug logging
-    console.log(`${crop.name}: profit=${profit.toFixed(0)}, totalRisk=${totalRisk.toFixed(1)}, scenarios=[${priceScenario}%,${costScenario}%,${rainfallScenario}%], finalRisk=${riskScore.toFixed(1)}`);
+    // Apply realistic distribution scaling
+    if (totalRiskPoints <= 25) {
+      riskScore = 15 + totalRiskPoints * 0.8; // Low risk: 15-35
+    } else if (totalRiskPoints <= 50) {
+      riskScore = 35 + (totalRiskPoints - 25) * 1.2; // Medium risk: 35-65
+    } else if (totalRiskPoints <= 75) {
+      riskScore = 65 + (totalRiskPoints - 50) * 1.0; // High risk: 65-90
+    } else {
+      riskScore = 90 + Math.min(10, (totalRiskPoints - 75) * 0.3); // Very high: 90-100
+    }
+    
+    // Ensure proper bounds and add some natural variation
+    const variation = (Math.random() - 0.5) * 4; // ±2 point natural variation
+    riskScore = Math.max(10, Math.min(95, riskScore + variation));
+    
+    // Debug logging with detailed breakdown
+    console.log(`${crop.name} Risk Breakdown: Market(${marketRisk.toFixed(1)}) + Crop(${cropRisk}) + Weather(${weatherRisk.toFixed(1)}) + Economic(${economicRisk.toFixed(1)}) + Profit(${profitabilityRisk}) = ${totalRiskPoints.toFixed(1)} → ${riskScore.toFixed(1)}`);
 
     return {
       revenue: revenue.toFixed(0),
@@ -673,6 +743,69 @@ const PlantProfitDashboard = () => {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Optimize Plan */}
+        {model && (
+          <div className="card" style={{ marginTop: 16 }}>
+            <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12 }}>Optimize Plan</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 12, lineHeight: 1.5 }}>
+              Run a quick optimization to allocate acres to crops to maximize expected profit based on your farm model results.
+            </p>
+            <div style={{ marginBottom: 12 }}>
+              <button className="btn-primary" onClick={optimizePlan}>Optimize Plan</button>
+            </div>
+            {optResult && (
+              <div style={{ marginTop: 12 }}>
+                <h4 style={{ marginBottom: 8 }}>Allocation</h4>
+                {Array.isArray(optResult.allocation) && optResult.allocation.length > 0 ? (
+                  <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 12 }}>
+                    <thead>
+                      <tr style={{ background: 'var(--card)' }}>
+                        <th style={{ textAlign: 'left', padding: '6px 10px', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>Crop</th>
+                        <th style={{ textAlign: 'right', padding: '6px 10px', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>Acres</th>
+                        <th style={{ textAlign: 'right', padding: '6px 10px', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>Profit/Acre</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {optResult.allocation.map((row) => (
+                        <tr key={row.key}>
+                          <td style={{ padding: '6px 10px', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>{row.key}</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'right', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>{row.acres}</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'right', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>${Math.round(row.profitPerAcre).toLocaleString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div style={{ color: 'var(--warning)', marginBottom: 12 }}>No allocation data returned.</div>
+                )}
+                {typeof optResult.totalProfit === 'number' && !isNaN(optResult.totalProfit) && (
+                  <>
+                    <h4 style={{ marginTop: 16, marginBottom: 4 }}>Estimated Total Profit</h4>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent)', marginBottom: 12 }}>${Math.round(optResult.totalProfit).toLocaleString()}</div>
+                  </>
+                )}
+                {optResult.explanation && (
+                  <>
+                    <h4 style={{ marginTop: 16, marginBottom: 4 }}>AI Explanation</h4>
+                    <div style={{ whiteSpace: 'pre-wrap', background: 'var(--card)', borderRadius: 6, padding: 10, color: 'var(--text-secondary)', border: '1px solid var(--border-color)' }}>
+                      {(() => {
+                        try {
+                          const parsed = JSON.parse(optResult.explanation);
+                          if (parsed && parsed.answer) {
+                            return parsed.answer.replace(/[{}\[\]"]+/g, '').trim();
+                          }
+                        } catch (e) {}
+                        // Remove any curly braces, quotes, or brackets left
+                        return String(optResult.explanation).replace(/[{}\[\]"]+/g, '').trim();
+                      })()}
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         )}
 
