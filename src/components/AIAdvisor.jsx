@@ -20,8 +20,8 @@ export default function AIAdvisor() {
     setLoadingModel(true);
     setModelError(null);
     try {
-      // Explicit backend URL (server runs on port 3001)
-  const res = await fetch('http://localhost:3001/api/farm-model', {
+      // Use relative URL for Vercel compatibility
+      const res = await fetch('/api/farm-model', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ acres: Number(acres), irrigated: Number(irrigated), budget: Number(budget), zones })
@@ -45,7 +45,7 @@ export default function AIAdvisor() {
   const testApi = async () => {
     setHealthStatus(null);
     try {
-  const res = await fetch('http://localhost:3001/api/health');
+      const res = await fetch('/api/health');
       if (!res.ok) throw new Error(`Status ${res.status}`);
       const j = await res.json();
       setHealthStatus({ ok: true, info: j });
@@ -61,7 +61,7 @@ export default function AIAdvisor() {
     setMessages(prev => [...prev, userMsg]);
     setLoadingQuery(true);
     try {
-      const res = await fetch('http://localhost:3001/api/ai/query', {
+      const res = await fetch('/api/ai/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query })
@@ -102,7 +102,7 @@ export default function AIAdvisor() {
     if (!model) return alert('Build the farm model first');
     setOptResult(null);
     try {
-  const res = await fetch('http://localhost:3001/api/optimize', {
+      const res = await fetch('/api/optimize', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model, acres: Number(acres), budget: Number(budget) })
       });
       if (!res.ok) {
