@@ -25,6 +25,16 @@ const PlantProfitDashboard = () => {
   const [climateProjections, setClimateProjections] = useState(null);
   const [aiWeatherLoading, setAiWeatherLoading] = useState(false);
 
+  // Farm model state
+  const [acres, setAcres] = useState(50);
+  const [irrigated, setIrrigated] = useState(50);
+  const [budget, setBudget] = useState(25000);
+  const [zones, setZones] = useState('');
+  const [model, setModel] = useState(null);
+  const [loadingModel, setLoadingModel] = useState(false);
+  const [modelError, setModelError] = useState(null);
+  const [healthStatus, setHealthStatus] = useState(null);
+
   const FRESNO_LAT = 36.7378;
   const FRESNO_LON = -119.7871;
 
@@ -265,6 +275,46 @@ const PlantProfitDashboard = () => {
       setCropData(cropMode === 'annual' ? annualCropData : perennialCropData);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Farm model functions
+  const buildModel = async () => {
+    setLoadingModel(true);
+    setModelError(null);
+    try {
+      // Use relative URL for Vercel compatibility
+      const res = await fetch('/api/farm-model', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ acres: Number(acres), irrigated: Number(irrigated), budget: Number(budget), zones })
+      });
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(`Server error (${res.status}): ${txt}`);
+      }
+      const data = await res.json();
+      if (!data || !data.model) throw new Error('Invalid model response from server');
+      setModel(data.model);
+    } catch (err) {
+      console.error('buildModel error', err);
+      setModelError(err.message || String(err));
+      setModel(null);
+    } finally {
+      setLoadingModel(false);
+    }
+  };
+
+  const testApi = async () => {
+    setHealthStatus(null);
+    try {
+      const res = await fetch('/api/health');
+      if (!res.ok) throw new Error(`Status ${res.status}`);
+      const j = await res.json();
+      setHealthStatus({ ok: true, info: j });
+    } catch (err) {
+      console.error('health check failed', err);
+      setHealthStatus({ ok: false, error: err.message || String(err) });
     }
   };
 
@@ -539,6 +589,50 @@ const PlantProfitDashboard = () => {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Farm Model Building Section */}
+        <div className="card" style={{ marginTop: 16 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+            🏗️ Build Farm Model
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16, lineHeight: 1.5 }}>
+            Create a custom financial model for your farm. Input your land, irrigation, and budget details to generate detailed crop recommendations with profit projections and risk analysis.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 12 }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: 6, color: 'var(--text-secondary)', fontSize: 13 }}>Acres</label>
+              <input type="number" value={acres} onChange={(e) => setAcres(e.target.value)} style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif', fontSize: 14 }} />
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: 6, color: 'var(--text-secondary)', fontSize: 13 }}>Irrigated Acres</label>
+              <input type="number" value={irrigated} onChange={(e) => setIrrigated(e.target.value)} style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif', fontSize: 14 }} />
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: 6, color: 'var(--text-secondary)', fontSize: 13 }}>Budget ($)</label>
+              <input type="number" value={budget} onChange={(e) => setBudget(e.target.value)} style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif', fontSize: 14 }} />
+            </div>
+          </div>
+          <div style={{ marginBottom: 12 }}>
+            <label style={{ display: 'block', marginBottom: 6, color: 'var(--text-secondary)', fontSize: 13 }}>Zones (optional)</label>
+            <input type="text" value={zones} onChange={(e) => setZones(e.target.value)} placeholder="e.g. zone1:10,zone2:40" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif', fontSize: 14, width: '100%' }} />
+          </div>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+            <button className="btn-primary" onClick={buildModel} disabled={loadingModel}>{loadingModel ? 'Building...' : 'Build Farm Model'}</button>
+            <button className="btn-ghost" onClick={testApi} style={{ padding: '8px 12px' }}>Test API</button>
+          </div>
+          {modelError && (
+            <div className="alert alert-warning" style={{ marginBottom: 12 }}>{modelError}</div>
+          )}
+          {healthStatus && (
+            <div className={healthStatus.ok ? "alert alert-success" : "alert alert-warning"} style={{ marginBottom: 12 }}>
+              {healthStatus.ok ? (
+                <div>API reachable — pid: {healthStatus.info.pid} — timestamp: {new Date(healthStatus.info.timestamp).toLocaleString()}</div>
+              ) : (
+                <div>API health check failed: {healthStatus.error}</div>
+              )}
+            </div>
+          )}
         </div>
 
         {weatherData && (
@@ -822,7 +916,7 @@ const PlantProfitDashboard = () => {
               Build custom farm models and get AI-powered insights. Create detailed financial projections, optimize crop allocation, and ask questions about farming strategies to maximize profitability.
             </p>
           </div>
-          <AIAdvisor />
+          <AIAdvisor model={model} />
         </div>
 
         {/* Carbon Credit Calculator */}
