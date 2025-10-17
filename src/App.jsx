@@ -463,8 +463,17 @@ const PlantProfitDashboard = () => {
             {rankedCrops.map((crop, index) => (
               <div key={crop.key} className="card" style={{ transition: 'box-shadow 160ms' }}>
                 <div style={{ marginBottom: 8 }}>
-                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>Rank #{index + 1}</div>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>{crop.name}</h3>
+                  <div style={{ 
+                    fontSize: 12, 
+                    color: index === 0 ? 'var(--text-secondary)' : index === 1 ? 'var(--warning)' : 'var(--danger)', 
+                    fontWeight: 700, 
+                    textTransform: 'uppercase' 
+                  }}>Rank #{index + 1}</div>
+                  <h3 style={{ 
+                    fontSize: 18, 
+                    fontWeight: 700, 
+                    color: index === 0 ? 'var(--text-primary)' : index === 1 ? 'var(--warning)' : 'var(--danger)' 
+                  }}>{crop.name}</h3>
                 </div>
 
                 <div style={{ display: 'grid', gap: 8 }}>
