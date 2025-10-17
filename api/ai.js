@@ -190,11 +190,15 @@ router.post('/query', async (req, res) => {
       } catch (e) {
         // Not valid JSON, continue
       }
-      // Add units to 'yield' and 'next season' recommendations in answer
-      answer = answer.replace(/(yield:?\s*)(\d+(\.\d+)?)/gi, '$1$2 tons/acre');
-      answer = answer.replace(/(plant next season:?\s*)([\w\s]+)(\d+(\.\d+)?)/gi, (m, p1, p2, p3) => `${p1}${p2}${p3} acres`);
-      // Remove any curly braces, quotes, brackets, and single quotes left
-      answer = answer.replace(/[{}\[\]"'`]+/g, '').replace(/\\n/g, ' ').replace(/\\/g, '').trim();
+  // Add units to 'yield' and 'next season' recommendations in answer
+  answer = answer.replace(/(yield:?\s*)(\d+(\.\d+)?)/gi, '$1$2 tons/acre');
+  answer = answer.replace(/(plant next season:?\s*)([\w\s]+)(\d+(\.\d+)?)/gi, (m, p1, p2, p3) => `${p1}${p2}${p3} acres`);
+  // Add units to price categories in 'what to plant next season' (e.g., $/acre)
+  answer = answer.replace(/(price:?\s*)(\$?\d+(\.\d+)?)/gi, '$1$2/acre');
+  answer = answer.replace(/(cost:?\s*)(\$?\d+(\.\d+)?)/gi, '$1$2/acre');
+  answer = answer.replace(/(profit:?\s*)(\$?\d+(\.\d+)?)/gi, '$1$2/acre');
+  // Remove any curly braces, quotes, brackets, and single quotes left
+  answer = answer.replace(/[{}\[\]"'`]+/g, '').replace(/\\n/g, ' ').replace(/\\/g, '').trim();
     }
     res.json({ answer, context: context.map(c => ({ id: c.id, score: c.score })) });
   } catch (err) {
