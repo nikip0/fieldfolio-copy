@@ -9,7 +9,7 @@ import AIAdvisor from './components/AIAdvisor.jsx';
 import CarbonCreditCalculator from './components/CarbonCreditCalculator.jsx';
 
 const PlantProfitDashboard = () => {
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState('E13D2BE0-E5A1-3841-8EC9-12344596027E');
   const [county, setCounty] = useState('FRESNO');
   const [stateAlpha, setStateAlpha] = useState('CA');
   const [commodity, setCommodity] = useState('COTTON');
@@ -19,7 +19,7 @@ const PlantProfitDashboard = () => {
   const [priceScenario, setPriceScenario] = useState(0);
   const [costScenario, setCostScenario] = useState(0);
   const [rainfallScenario, setRainfallScenario] = useState(0);
-  const [error, setError] = useState('📊 Showing sample crop data. Enter your USDA API key (optional) to load live county data.');
+  const [error, setError] = useState('📊 Showing sample crop data with live USDA API integration ready!');
   const [cropMode, setCropMode] = useState('annual');
   const [annualWeatherPrediction, setAnnualWeatherPrediction] = useState(null);
   const [climateProjections, setClimateProjections] = useState(null);
@@ -657,9 +657,9 @@ const PlantProfitDashboard = () => {
             <div className="input-group">
               <div style={{ flex: 1 }}>
                 <label style={{ display: 'block', marginBottom: 6, color: 'var(--text-secondary)', fontSize: 13 }}>
-                  USDA NASS API Key (optional - loads live county data)
+                  🔑 USDA NASS API Key (pre-configured for live county data)
                 </label>
-                <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="Enter your API key..." />
+                <input type="text" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="API key is pre-configured..." style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif', fontSize: 12 }} />
               </div>
               <div style={{ marginTop: 8 }}>
                 <label style={{ fontSize: 13, marginRight: 8, color: 'var(--text-secondary)' }}>County:</label>
@@ -669,7 +669,7 @@ const PlantProfitDashboard = () => {
                 <label style={{ fontSize: 13, marginRight: 8, color: 'var(--text-secondary)' }}>Commodity:</label>
                 <input type="text" value={commodity} onChange={e => setCommodity(e.target.value)} style={{ marginRight: 12 }} />
               </div>
-              <button onClick={fetchUSDAData} disabled={isLoading || !apiKey} className="btn-primary">
+              <button onClick={fetchUSDAData} disabled={isLoading} className="btn-primary">
                 {isLoading ? 'Loading...' : 'Load Live Data'}
               </button>
             </div>
