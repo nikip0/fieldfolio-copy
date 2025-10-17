@@ -908,14 +908,6 @@ const PlantProfitDashboard = () => {
 
         {/* AI Advisor onboarding & chat */}
         <div style={{ marginTop: 16 }}>
-          <div className="card" style={{ marginBottom: 16 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-              🤖 AI Farm Advisor
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 0, lineHeight: 1.5 }}>
-              Build custom farm models and get AI-powered insights. Create detailed financial projections, optimize crop allocation, and ask questions about farming strategies to maximize profitability.
-            </p>
-          </div>
           <AIAdvisor model={model} />
         </div>
 
