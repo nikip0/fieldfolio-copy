@@ -1,0 +1,78 @@
+{
+  "annual": {
+    "tomatoes": {
+      "name": "Processing Tomatoes",
+      "type": "annual",
+      "avgYield": 45,
+      "avgPrice": 95,
+      "costs": 3200,
+      "priceVolatility": 0.15,
+      "yieldHistory": [42, 44, 43, 46, 45, 47, 45],
+      "priceHistory": [88, 92, 90, 94, 95, 93, 95],
+      "description": "Annual crop - plant & harvest same year"
+    },
+    "cotton": {
+      "name": "Cotton",
+      "type": "annual",
+      "avgYield": 1400,
+      "avgPrice": 0.75,
+      "costs": 1200,
+      "priceVolatility": 0.20,
+      "yieldHistory": [1300, 1350, 1380, 1420, 1400, 1450, 1400],
+      "priceHistory": [0.68, 0.72, 0.71, 0.74, 0.75, 0.73, 0.75],
+      "description": "Annual crop - plant & harvest same year"
+    },
+    "corn": {
+      "name": "Corn",
+      "type": "annual",
+      "avgYield": 180,
+      "avgPrice": 5.50,
+      "costs": 950,
+      "priceVolatility": 0.18,
+      "yieldHistory": [170, 175, 178, 182, 180, 185, 180],
+      "priceHistory": [5.20, 5.40, 5.35, 5.45, 5.50, 5.48, 5.50],
+      "description": "Annual crop - plant & harvest same year"
+    }
+  },
+  "perennial": {
+    "almonds": {
+      "name": "Almonds",
+      "type": "perennial",
+      "avgYield": 2400,
+      "avgPrice": 2.80,
+      "costs": 4200,
+      "establishmentCost": 12000,
+      "yearsToProduction": 3,
+      "priceVolatility": 0.25,
+      "yieldHistory": [2200, 2300, 2350, 2400, 2380, 2450, 2400],
+      "priceHistory": [2.40, 2.60, 2.70, 2.75, 2.80, 2.85, 2.80],
+      "description": "Perennial orchard - 20-25 year lifespan, 3 years to production"
+    },
+    "grapes": {
+      "name": "Wine Grapes",
+      "type": "perennial",
+      "avgYield": 6,
+      "avgPrice": 850,
+      "costs": 3500,
+      "establishmentCost": 15000,
+      "yearsToProduction": 3,
+      "priceVolatility": 0.20,
+      "yieldHistory": [5.5, 5.8, 5.9, 6.0, 6.1, 6.2, 6.0],
+      "priceHistory": [800, 820, 830, 840, 850, 860, 850],
+      "description": "Perennial vineyard - 25-30 year lifespan, 3 years to production"
+    },
+    "pistachios": {
+      "name": "Pistachios",
+      "type": "perennial",
+      "avgYield": 2000,
+      "avgPrice": 3.50,
+      "costs": 3800,
+      "establishmentCost": 10000,
+      "yearsToProduction": 5,
+      "priceVolatility": 0.22,
+      "yieldHistory": [1800, 1900, 1950, 2000, 2050, 2100, 2000],
+      "priceHistory": [3.20, 3.30, 3.35, 3.45, 3.50, 3.55, 3.50],
+      "description": "Perennial orchard - 40-50 year lifespan, 5 years to production"
+    }
+  }
+}
