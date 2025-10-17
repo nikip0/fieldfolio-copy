@@ -311,6 +311,32 @@ const PlantProfitDashboard = () => {
       <LogoHeader />
       <div className="app-root">
         <div className="container">
+          {/* Hero Section */}
+          <div className="hero-card">
+            <div className="hero-content">
+              <h1 className="hero-title">Smart Farm Planning Dashboard</h1>
+              <p className="hero-subtitle">Make data-driven decisions for maximum profitability with AI-powered crop recommendations and market insights</p>
+              <div className="season-badge">
+                <div className="season-label">Current Season Outlook</div>
+                <div className="season-value">2025 Spring</div>
+              </div>
+            </div>
+            <div className="hero-stats">
+              <div className="stat-item">
+                <div className="stat-value">95%</div>
+                <div className="stat-label">Accuracy Rate</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-value">$2.3K</div>
+                <div className="stat-label">Avg. Profit Increase</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-value">500+</div>
+                <div className="stat-label">Farms Optimized</div>
+              </div>
+            </div>
+          </div>
+
           <div className="card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div />
