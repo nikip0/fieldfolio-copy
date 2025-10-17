@@ -260,6 +260,21 @@
   color: var(--text-primary);
   font-size: 14px;
 }
+
+/* General input and textarea styling */
+input, textarea, select {
+  background: var(--card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.1);
+}
 .input-group input:focus {
   outline: none;
   border-color: var(--accent);
@@ -394,22 +409,34 @@
 }
 
 /* Crop cards and badges */
-.crop-badge-best {
+.crop-badge-best, .crop-badge-good, .crop-badge-consider {
   background: var(--card);
-  color: var(--accent);
   border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.crop-badge-best {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 .crop-badge-good {
-  background: var(--card);
   color: var(--accent-2);
-  border: 1px solid var(--border-color);
+  border-color: var(--accent-2);
 }
 
 .crop-badge-consider {
-  background: var(--card);
   color: var(--text-secondary);
-  border: 1px solid var(--border-color);
+  border-color: var(--text-secondary);
 }
 
 .profit-section {
@@ -459,18 +486,21 @@
 /* Dark mode crop sections */
 @media (prefers-color-scheme: dark) {
   .crop-badge-best {
-    background: #064e3b;
+    background: rgba(6, 78, 59, 0.3);
     color: #a7f3d0;
+    border-color: #047857;
   }
 
   .crop-badge-good {
-    background: #1e3a8a;
+    background: rgba(30, 58, 138, 0.3);
     color: #dbeafe;
+    border-color: #1d4ed8;
   }
 
   .crop-badge-consider {
-    background: #374151;
+    background: rgba(75, 85, 99, 0.3);
     color: #d1d5db;
+    border-color: #6b7280;
   }
 
   .profit-section {

@@ -218,7 +218,19 @@ const PlantProfitDashboard = () => {
       breakEven = (crop.establishmentCost / profit).toFixed(1);
     }
 
-    const riskScore = Math.min(100, (crop.priceVolatility * 100 + Math.abs(rainfallScenario) / 2));
+    // Calculate risk score based on profit outcome and volatility
+    let riskScore;
+    if (profit < 0) {
+      // Negative profit = very high risk (70-95)
+      riskScore = Math.min(95, 70 + Math.abs(profit) / 100 + crop.priceVolatility * 50);
+    } else if (profit < 200) {
+      // Low profit = moderate-high risk (40-70)
+      riskScore = Math.min(70, 40 + (200 - profit) / 10 + crop.priceVolatility * 30);
+    } else {
+      // Good profit = lower risk based on volatility (5-40)
+      riskScore = Math.min(40, 5 + crop.priceVolatility * 35 + Math.abs(rainfallScenario) / 5);
+    }
+    riskScore = Math.max(5, riskScore); // Minimum risk of 5
 
     return {
       revenue: revenue.toFixed(0),
