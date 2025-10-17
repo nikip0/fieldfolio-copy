@@ -6,7 +6,7 @@
   --text-secondary: #6b7280;
   --border-color: #e5e7eb;
   
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -81,4 +81,21 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* Global form element styling for consistent fonts */
+input, textarea, select {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif !important;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+button {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif !important;
+}
+
+/* Smooth font rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

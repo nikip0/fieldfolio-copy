@@ -124,20 +124,20 @@ export default function AIAdvisor() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 8 }}>
           <div>
             <label>Acres</label>
-            <input type="number" value={acres} onChange={(e) => setAcres(e.target.value)} />
+            <input type="number" value={acres} onChange={(e) => setAcres(e.target.value)} style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif', fontSize: 14 }} />
           </div>
           <div>
             <label>Irrigated Acres</label>
-            <input type="number" value={irrigated} onChange={(e) => setIrrigated(e.target.value)} />
+            <input type="number" value={irrigated} onChange={(e) => setIrrigated(e.target.value)} style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif', fontSize: 14 }} />
           </div>
           <div>
             <label>Budget ($)</label>
-            <input type="number" value={budget} onChange={(e) => setBudget(e.target.value)} />
+            <input type="number" value={budget} onChange={(e) => setBudget(e.target.value)} style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif', fontSize: 14 }} />
           </div>
         </div>
         <div style={{ marginTop: 10 }}>
           <label>Zones (optional)</label>
-          <input type="text" value={zones} onChange={(e) => setZones(e.target.value)} placeholder="e.g. zone1:10,zone2:40" />
+          <input type="text" value={zones} onChange={(e) => setZones(e.target.value)} placeholder="e.g. zone1:10,zone2:40" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif', fontSize: 14 }} />
         </div>
         <div style={{ marginTop: 10 }}>
           <div style={{ display: 'flex', gap: 8 }}>
@@ -198,7 +198,7 @@ export default function AIAdvisor() {
       <div className="card" style={{ marginTop: 12 }}>
         <h3 style={{ fontSize: 16, fontWeight: 700 }}>Ask the AI Advisor</h3>
         <div style={{ marginTop: 8 }}>
-          <textarea value={query} onChange={e => setQuery(e.target.value)} placeholder="Ask something like: Which crop mix maximizes profit given 50 irrigated acres and $25k?" style={{ width: '100%', minHeight: 80 }} />
+          <textarea value={query} onChange={e => setQuery(e.target.value)} placeholder="Ask something like: Which crop mix maximizes profit given 50 irrigated acres and $25k?" style={{ width: '100%', minHeight: 80, fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif', fontSize: 14, lineHeight: 1.5 }} />
         </div>
         <div style={{ marginTop: 8 }}>
           <button className="btn-primary" onClick={sendQuery} disabled={loadingQuery}>{loadingQuery ? 'Thinking...' : 'Ask AI'}</button>
