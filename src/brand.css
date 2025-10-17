@@ -1,0 +1,70 @@
+/*
+  FieldFolio Brand Theme
+  - Primary: #23412a (deep green)
+  - Accent: #f3c96b (mustard yellow)
+  - Background: #f9f6ee
+*/
+:root {
+  --brand-green: #23412a;
+  --brand-yellow: #f3c96b;
+  --brand-bg: #f9f6ee;
+}
+
+body {
+  background: var(--brand-bg);
+  color: var(--brand-green);
+  font-family: 'Inter', sans-serif;
+}
+
+.header-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 32px 0 24px 0;
+}
+
+.header-logo img {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 12px;
+}
+
+.header-logo h1 {
+  font-weight: 800;
+  font-size: 36px;
+  color: var(--brand-green);
+  letter-spacing: -1px;
+  margin: 0;
+}
+
+.btn-primary {
+  background: var(--brand-green);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #2e5a36;
+}
+
+input, select {
+  border: 1.5px solid var(--brand-green);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(35,65,42,0.07);
+  padding: 24px;
+  margin-bottom: 24px;
+}

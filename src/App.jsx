@@ -3,17 +3,23 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, L
 import { TrendingUp, CloudRain, DollarSign, AlertTriangle, Settings, Download } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import './dashboard.css';
+import './brand.css';
+// import LogoHeader from './components/LogoHeader.jsx';
 import AIAdvisor from './components/AIAdvisor.jsx';
+import CarbonCreditCalculator from './components/CarbonCreditCalculator.jsx';
 
 const PlantProfitDashboard = () => {
-  const [apiKey, setApiKey] = useState('E13D2BE0-E5A1-3841-8EC9-12344596027E');
+  const [apiKey, setApiKey] = useState('');
+  const [county, setCounty] = useState('FRESNO');
+  const [stateAlpha, setStateAlpha] = useState('CA');
+  const [commodity, setCommodity] = useState('COTTON');
   const [isLoading, setIsLoading] = useState(false);
   const [weatherData, setWeatherData] = useState(null);
   const [cropData, setCropData] = useState(null);
   const [priceScenario, setPriceScenario] = useState(0);
   const [costScenario, setCostScenario] = useState(0);
   const [rainfallScenario, setRainfallScenario] = useState(0);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('📊 Showing sample crop data. Enter your USDA API key (optional) to load live county data.');
   const [cropMode, setCropMode] = useState('annual');
 
   const FRESNO_LAT = 36.7378;
@@ -128,19 +134,12 @@ const PlantProfitDashboard = () => {
       setError('Please enter your USDA NASS API key');
       return;
     }
-
-    setIsLoading(true);
-    setError(null);
-
     try {
-      // Very specific query for Fresno County cotton yields
-      const cottonUrl = `http://localhost:3001/api/usda?key=${apiKey}&county_name=FRESNO&state_alpha=CA&commodity_desc=COTTON&statisticcat_desc=YIELD&agg_level_desc=COUNTY&year__GE=2018&format=JSON`;
-      
-      console.log('Fetching from:', cottonUrl);
-      
-      const response = await fetch(cottonUrl);
+      // Dynamic query for any county/state/commodity
+  const url = `/api/usda?key=${apiKey}&county_name=${encodeURIComponent(county)}&state_alpha=${encodeURIComponent(stateAlpha)}&commodity_desc=${encodeURIComponent(commodity)}&statisticcat_desc=YIELD&agg_level_desc=COUNTY&year__GE=2018&format=JSON`;
+      console.log('Fetching from:', url);
+      const response = await fetch(url);
       const data = await response.json();
-      
       console.log('API Response:', data);
 
       if (data.error) {
@@ -168,11 +167,11 @@ const PlantProfitDashboard = () => {
               updatedCropData.cotton.yieldHistory = yields.map(y => y.value);
               updatedCropData.cotton.avgYield = yields[yields.length - 1].value;
               setCropData(updatedCropData);
-              setError(`✅ Loaded live cotton data for Fresno County (${yields.length} years)`);
+              setError(`✅ Loaded live ${commodity} data for ${county} County, ${stateAlpha} (${yields.length} years)`);
             } else {
               // If the user is viewing perennials, don't overwrite with annual data.
               setCropData(perennialCropData);
-              setError(`⚠️ USDA returned cotton data (${yields.length} years). Showing perennial sample data instead.`);
+              setError(`⚠️ USDA returned ${commodity} data (${yields.length} years). Showing perennial sample data instead.`);
             }
         } else {
           setCropData(cropMode === 'annual' ? annualCropData : perennialCropData);
@@ -184,7 +183,7 @@ const PlantProfitDashboard = () => {
       }
     } catch (err) {
       console.error('USDA fetch error:', err);
-      setError('Error fetching data: ' + err.message);
+      setError('⚠️ Unable to connect to USDA API - using sample data. This is normal if the backend is not running or the API key is invalid.');
       setCropData(cropMode === 'annual' ? annualCropData : perennialCropData);
     } finally {
       setIsLoading(false);
@@ -224,7 +223,7 @@ const PlantProfitDashboard = () => {
     return {
       revenue: revenue.toFixed(0),
       profit: profit.toFixed(0),
-      yield: adjustedYield.toFixed(1),
+      yield: adjustedYield.toFixed(0),
       price: adjustedPrice.toFixed(2),
       costs: adjustedCosts.toFixed(0),
       riskScore: riskScore.toFixed(0),
@@ -308,16 +307,15 @@ const PlantProfitDashboard = () => {
   };
 
   return (
-    <div className="app-root">
-      <div className="container">
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <h1 className="header-title">PlantProfit</h1>
-              <p className="header-sub">Fresno County, California • Central Valley</p>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ color: 'var(--muted)', fontSize: 13 }}>Current Season Outlook</div>
+    <>
+  {/* LogoHeader removed */}
+      <div className="app-root">
+        <div className="container">
+          <div className="card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div />
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ color: 'var(--muted)', fontSize: 13 }}>Current Season Outlook</div>
               <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--accent)' }}>2025 Spring</div>
             </div>
           </div>
@@ -343,6 +341,14 @@ const PlantProfitDashboard = () => {
                 </label>
                 <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="Enter your API key..." />
               </div>
+              <div style={{ marginTop: 8 }}>
+                <label style={{ fontSize: 13, marginRight: 8 }}>County:</label>
+                <input type="text" value={county} onChange={e => setCounty(e.target.value)} style={{ marginRight: 12 }} />
+                <label style={{ fontSize: 13, marginRight: 8 }}>State:</label>
+                <input type="text" value={stateAlpha} onChange={e => setStateAlpha(e.target.value)} style={{ width: 40, marginRight: 12 }} />
+                <label style={{ fontSize: 13, marginRight: 8 }}>Commodity:</label>
+                <input type="text" value={commodity} onChange={e => setCommodity(e.target.value)} style={{ marginRight: 12 }} />
+              </div>
               <button onClick={fetchUSDAData} disabled={isLoading || !apiKey} className="btn-primary">
                 {isLoading ? 'Loading...' : 'Load Live Data'}
               </button>
@@ -359,6 +365,14 @@ const PlantProfitDashboard = () => {
         {/* AI Advisor onboarding & chat */}
         <div style={{ marginTop: 16 }}>
           <AIAdvisor />
+        </div>
+        
+        {/* Carbon Credit Calculator */}
+        <div className="card" style={{ marginTop: 16 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <DollarSign className="text-green-500" /> Carbon Credit Calculator
+          </h2>
+          <CarbonCreditCalculator />
         </div>
 
         {weatherData && (
@@ -526,6 +540,7 @@ const PlantProfitDashboard = () => {
         <div className="footer-note">Data sources: USDA NASS (county yields) • Open-Meteo (weather) • Live updated {new Date().toLocaleDateString()}</div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -1,0 +1,4 @@
+// FieldFolio logo for branding
+// Place this file at: src/assets/fieldfolio-logo.png
+// (This is a placeholder. Please upload your actual logo image as fieldfolio-logo.png in the src/assets/ directory.)
+git remote set-url origin https://github.com/nikip0/plantprofit-dashboard.git
