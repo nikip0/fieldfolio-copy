@@ -118,7 +118,7 @@ export default function AIAdvisor() {
   };
 
   return (
-    <div>
+    <div style={{ fontFamily: 'Inter, Helvetica Neue, Arial, sans-serif', color: '#222', fontSize: 15, lineHeight: 1.6 }}>
       <div className="card">
         <h3 style={{ fontSize: 16, fontWeight: 700 }}>Onboard Farm / Build Model</h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 8 }}>
