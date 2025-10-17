@@ -372,33 +372,54 @@ const PlantProfitDashboard = () => {
   const calculateProfit = (crop) => {
     if (!crop || !weatherData) return null;
 
-    // Base factors
-    const rainfallFactor = 1 + (rainfallScenario / 100) * 0.3;
-    const weatherFactor = weatherData.rainfallAnomaly ? 1 + (parseFloat(weatherData.rainfallAnomaly) / 100) * 0.2 : 1;
+    // Base factors - limit extreme adjustments to keep realistic
+    const rainfallFactor = Math.max(0.7, Math.min(1.3, 1 + (rainfallScenario / 100) * 0.3)); // Cap at ±30% yield change
+    const weatherFactor = weatherData.rainfallAnomaly ? 
+      Math.max(0.8, Math.min(1.2, 1 + (parseFloat(weatherData.rainfallAnomaly) / 100) * 0.2)) : 1; // Cap at ±20%
     
-    // AI-enhanced factors
+    // AI-enhanced factors - prevent extreme pessimism
     let aiWeatherFactor = 1;
     let climateRiskFactor = 1;
     
     if (crop.type === 'annual' && annualWeatherPrediction) {
-      // Apply AI annual weather predictions
-      aiWeatherFactor = annualWeatherPrediction.tempFactor * annualWeatherPrediction.waterFactor;
-      climateRiskFactor = 1 - annualWeatherPrediction.climateRisk;
+      // Apply AI annual weather predictions with limits
+      const tempFactor = Math.max(0.85, Math.min(1.15, annualWeatherPrediction.tempFactor));
+      const waterFactor = Math.max(0.85, Math.min(1.15, annualWeatherPrediction.waterFactor));
+      aiWeatherFactor = tempFactor * waterFactor;
+      climateRiskFactor = Math.max(0.8, 1 - annualWeatherPrediction.climateRisk); // Prevent more than 20% reduction
     } else if (crop.type === 'perennial' && climateProjections) {
-      // Apply climate change projections (use 2030 projection as primary)
+      // Apply climate change projections with limits
       const nearTermProjection = climateProjections[0];
       if (nearTermProjection) {
-        climateRiskFactor = parseFloat(nearTermProjection.yieldFactor);
+        climateRiskFactor = Math.max(0.85, Math.min(1.1, parseFloat(nearTermProjection.yieldFactor))); // Cap changes
       }
     }
 
     const adjustedYield = crop.avgYield * rainfallFactor * weatherFactor * aiWeatherFactor * climateRiskFactor;
 
-    const adjustedPrice = crop.avgPrice * (1 + priceScenario / 100);
-    const adjustedCosts = crop.costs * (1 + costScenario / 100);
+    // Limit price and cost scenarios to prevent unrealistic extremes
+    const adjustedPrice = crop.avgPrice * (1 + Math.max(-30, Math.min(50, priceScenario)) / 100); // Cap price changes
+    const adjustedCosts = crop.costs * (1 + Math.max(-20, Math.min(40, costScenario)) / 100); // Cap cost changes
 
     const revenue = adjustedYield * adjustedPrice;
     const profit = revenue - adjustedCosts;
+
+    // Debug logging to understand negative profits
+    console.log(`\n=== ${crop.name} Profit Calculation ===`);
+    console.log(`Base Data: yield=${crop.avgYield}, price=$${crop.avgPrice}, costs=$${crop.costs}`);
+    console.log(`Adjustment Factors:`);
+    console.log(`  - rainfallFactor: ${rainfallFactor.toFixed(3)} (scenario: ${rainfallScenario}%)`);
+    console.log(`  - weatherFactor: ${weatherFactor.toFixed(3)} (rainfall anomaly: ${weatherData?.rainfallAnomaly || 'N/A'}%)`);
+    console.log(`  - aiWeatherFactor: ${aiWeatherFactor.toFixed(3)}`);
+    console.log(`  - climateRiskFactor: ${climateRiskFactor.toFixed(3)}`);
+    console.log(`Adjusted Values:`);
+    console.log(`  - adjustedYield: ${adjustedYield.toFixed(2)} (${((adjustedYield/crop.avgYield - 1) * 100).toFixed(1)}% change)`);
+    console.log(`  - adjustedPrice: $${adjustedPrice.toFixed(2)}`);
+    console.log(`  - adjustedCosts: $${adjustedCosts.toFixed(0)}`);
+    console.log(`Final Results:`);
+    console.log(`  - revenue: $${revenue.toFixed(0)}`);
+    console.log(`  - profit: $${profit.toFixed(0)} ${profit < 0 ? '❌ NEGATIVE' : '✅'}`);
+    console.log(`=====================================\n`);
 
     let roi = null;
     let breakEven = null;
