@@ -5,7 +5,13 @@ const path = require('path');
 
 // Minimal local RAG using OpenAI embeddings. Prefer Chroma for similarity if available.
 const OpenAI = require('openai');
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Check if API key is configured
+if (!process.env.OPENAI_API_KEY) {
+  console.warn('WARNING: OPENAI_API_KEY not found in environment variables. AI features will not work.');
+}
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy-key' });
 
 let useChroma = false;
 let chromaClient = null;
@@ -90,6 +96,14 @@ router.post('/ingest', async (req, res) => {
 
 router.post('/query', async (req, res) => {
   try {
+    // Check if API key is configured
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({ 
+        error: 'OpenAI API key not configured. Please add OPENAI_API_KEY to your environment variables.',
+        answer: 'AI features are currently unavailable. Please contact the administrator to configure the OpenAI API key.'
+      });
+    }
+
     const { query, topK = 3 } = req.body;
     if (!query) return res.status(400).json({ error: 'missing query' });
 

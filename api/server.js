@@ -143,22 +143,28 @@ app.post('/api/optimize', async (req, res) => {
     // Call AI endpoint to get an explanation - use direct OpenAI instead of internal API call
     let aiExplanation = null;
     try {
-      // Import OpenAI directly instead of calling localhost
-      const OpenAI = require('openai');
-      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-      
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: [{ role: 'user', content: explanationPrompt }],
-        temperature: 0.7
-      });
-      
-      let answer = completion.choices[0].message.content;
-      // Remove any JSON formatting artifacts
-      answer = answer.replace(/[{}\[\]"'`]+/g, '').replace(/\\n/g, ' ').replace(/\\/g, '').trim();
-      aiExplanation = answer;
+      // Check if API key is configured
+      if (!process.env.OPENAI_API_KEY) {
+        aiExplanation = 'AI explanation unavailable: OpenAI API key not configured. Please add OPENAI_API_KEY to your environment variables.';
+      } else {
+        // Import OpenAI directly instead of calling localhost
+        const OpenAI = require('openai');
+        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        
+        const completion = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [{ role: 'user', content: explanationPrompt }],
+          temperature: 0.7
+        });
+        
+        let answer = completion.choices[0].message.content;
+        // Remove any JSON formatting artifacts
+        answer = answer.replace(/[{}\[\]"'`]+/g, '').replace(/\\n/g, ' ').replace(/\\/g, '').trim();
+        aiExplanation = answer;
+      }
     } catch (err) {
-      aiExplanation = 'Could not fetch AI explanation: ' + err.message;
+      console.error('OpenAI API error:', err);
+      aiExplanation = 'Could not fetch AI explanation: ' + (err.message || 'Unknown error');
     }
 
     res.json({ allocation, totalProfit, explanation: aiExplanation });
