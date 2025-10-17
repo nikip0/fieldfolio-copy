@@ -71,43 +71,6 @@ export default function AIAdvisor({ model }) {
 
   return (
     <div style={{ fontFamily: 'Inter, Helvetica Neue, Arial, sans-serif', color: 'var(--text-primary)', fontSize: 15, lineHeight: 1.6 }}>
-      {model && (
-        <div className="card" style={{ marginBottom: 12 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12 }}>Farm Model Results</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: 12 }}>
-            {model.map((m) => (
-              <div key={m.key} className="metric-section" style={{ padding: 16, border: '1px solid var(--border-color)', borderRadius: 8 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
-                  <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)' }}>{m.label}</div>
-                  <div style={{ fontSize: 14, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>{m.type}</div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, marginBottom: 8 }}>
-                  <div>
-                    <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Estimated Yield</div>
-                    <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{m.estimatedYield} {m.type === 'annual' ? 'tons' : 'lbs'}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Est. Price</div>
-                    <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>${m.estPrice}</div>
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, marginBottom: 8 }}>
-                  <div>
-                    <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Revenue/Acre</div>
-                    <div style={{ fontWeight: 600, color: 'var(--accent)' }}>{m.revenuePerAcreFormatted}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Profit/Acre</div>
-                    <div style={{ fontWeight: 600, color: m.profitable ? 'var(--success)' : 'var(--warning)' }}>{m.profitPerAcreFormatted}</div>
-                  </div>
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--text-secondary)', fontStyle: 'italic' }}>{m.description}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       <div className="card" style={{ marginTop: 12 }}>
         <h3 style={{ fontSize: 16, fontWeight: 700 }}>Ask the AI Advisor</h3>
         <div style={{ marginTop: 8 }}>
