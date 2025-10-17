@@ -656,9 +656,6 @@ const PlantProfitDashboard = () => {
           <div style={{ marginTop: 18, paddingTop: 18, borderTop: '1px solid var(--border-color)' }}>
             <div className="input-group">
               <div style={{ flex: 1 }}>
-                <div style={{ marginBottom: 8, padding: 8, background: 'var(--card)', border: '1px solid var(--border-color)', borderRadius: 4, fontSize: 12, fontFamily: 'monospace', color: 'var(--text-primary)' }}>
-                  E13D2BE0-E5A1-3841-8EC9-12344596027E
-                </div>
                 <label style={{ display: 'block', marginBottom: 6, color: 'var(--text-secondary)', fontSize: 13 }}>
                   🔑 USDA NASS API Key (pre-configured for live county data)
                 </label>
