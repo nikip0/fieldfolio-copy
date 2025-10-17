@@ -335,37 +335,46 @@ const PlantProfitDashboard = () => {
       breakEven = (crop.establishmentCost / profit).toFixed(1);
     }
 
-    // Enhanced risk score with AI weather predictions
+    // Enhanced risk score with AI weather predictions and dynamic scenarios
     let riskScore;
-    let baseRisk = crop.priceVolatility * 20; // Reduced multiplier from 35 to 20
     
-    // Add AI weather risk (smaller contributions)
+    // Start with base risk from crop characteristics (reduced impact)
+    let totalRisk = crop.priceVolatility * 10; // Reduced from 20 to 10
+    
+    // Add scenario-based risks (major impact)
+    totalRisk += Math.abs(priceScenario) * 0.8; // Price volatility risk
+    totalRisk += Math.abs(costScenario) * 0.6; // Cost increase risk
+    totalRisk += Math.abs(rainfallScenario) * 0.7; // Weather risk
+    
+    // Add AI weather risk factors
     if (crop.type === 'annual' && annualWeatherPrediction) {
-      baseRisk += annualWeatherPrediction.climateRisk * 15; // Reduced from 30 to 15
-      if (annualWeatherPrediction.prediction === 'drought-likely') baseRisk += 8; // Reduced from 15 to 8
-      if (annualWeatherPrediction.prediction === 'wet-season') baseRisk += 5; // Reduced from 10 to 5
+      totalRisk += annualWeatherPrediction.climateRisk * 10; // Reduced from 15
+      if (annualWeatherPrediction.prediction === 'drought-likely') totalRisk += 12;
+      if (annualWeatherPrediction.prediction === 'wet-season') totalRisk += 8;
     } else if (crop.type === 'perennial' && climateProjections) {
       const futureRisk = climateProjections[2]; // 2040 projection
       if (futureRisk) {
-        baseRisk += parseFloat(futureRisk.extremeWeatherRisk) * 0.3; // Reduced from 0.5 to 0.3
+        totalRisk += parseFloat(futureRisk.extremeWeatherRisk) * 0.2;
       }
     }
     
-    // Profit-based risk calculation with better scaling
+    // Apply profit-based modulation
     if (profit < 0) {
-      // Negative profit = high risk (60-85)
-      riskScore = Math.min(85, 60 + Math.abs(profit) / 50 + baseRisk); // Better scaling
+      // Negative profit = very high risk (50-95)
+      riskScore = Math.min(95, 50 + totalRisk + Math.abs(profit) / 100);
     } else if (profit < 500) {
-      // Low profit = moderate risk (25-60)
-      riskScore = Math.min(60, 25 + (500 - profit) / 25 + baseRisk); // Better scaling
+      // Low profit = moderate risk (20-70)
+      riskScore = Math.min(70, 20 + totalRisk + (500 - profit) / 50);
     } else {
-      // Good profit = low risk (5-30)
-      riskScore = Math.min(30, 5 + baseRisk + Math.abs(rainfallScenario) / 10); // Better scaling
+      // Good profit = low risk (5-45)
+      riskScore = Math.min(45, 5 + totalRisk * 0.5);
     }
-    riskScore = Math.max(5, riskScore); // Minimum risk of 5
+    
+    // Ensure minimum and maximum bounds
+    riskScore = Math.max(5, Math.min(95, riskScore));
     
     // Debug logging
-    console.log(`${crop.name}: profit=${profit}, baseRisk=${baseRisk.toFixed(1)}, finalRisk=${riskScore.toFixed(1)}`);
+    console.log(`${crop.name}: profit=${profit.toFixed(0)}, totalRisk=${totalRisk.toFixed(1)}, scenarios=[${priceScenario}%,${costScenario}%,${rainfallScenario}%], finalRisk=${riskScore.toFixed(1)}`);
 
     return {
       revenue: revenue.toFixed(0),
