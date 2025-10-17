@@ -4,10 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
+    "dev": "vite",
     "build": "vite build",
-  "lint": "eslint .",
-  "start:api": "node api/server.js",
+    "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
