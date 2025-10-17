@@ -8,7 +8,7 @@
   --brand-green: #23412a;
   --brand-yellow: #f3c96b;
   --brand-bg: #f9f6ee;
-  --header-bg: #ffffff;
+  --header-bg: var(--card);
   --header-text: #23412a;
   --header-tagline: #6b7280;
 }
@@ -75,9 +75,10 @@ input, select {
 }
 
 .card {
-  background: #fff;
+  background: var(--card);
   border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(35,65,42,0.07);
+  box-shadow: var(--shadow-md);
   padding: 24px;
   margin-bottom: 24px;
+  border: 1px solid var(--border-color);
 }
