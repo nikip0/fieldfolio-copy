@@ -29,7 +29,25 @@ let docs = []; // { id, text, metadata }
 let embeddings = []; // { id, vector }
 
 async function embedText(text) {
-  const res = await openai.embeddings.create({ model: 'text-embedding-3-small', input: text });
+  // Add units to yield values in the text before embedding
+  let textWithUnits = text;
+  try {
+    // If text is JSON, add units to any 'yield' or 'next season' fields
+    const obj = JSON.parse(text);
+    if (obj && typeof obj === 'object') {
+      for (const k of Object.keys(obj)) {
+        if (/yield/i.test(k) && typeof obj[k] === 'number') {
+          obj[k] = `${obj[k]} tons/acre`;
+        }
+        // Add units to 'what to plant next season' recommendations
+        if (/next season/i.test(k) && typeof obj[k] === 'string') {
+          obj[k] = obj[k].replace(/(\d+(\.\d+)?)/g, '$1 acres');
+        }
+      }
+      textWithUnits = JSON.stringify(obj);
+    }
+  } catch {}
+  const res = await openai.embeddings.create({ model: 'text-embedding-3-small', input: textWithUnits });
   return res.data[0].embedding;
 }
 
@@ -172,8 +190,11 @@ router.post('/query', async (req, res) => {
       } catch (e) {
         // Not valid JSON, continue
       }
-  // Remove any curly braces, quotes, brackets, and single quotes left
-  answer = answer.replace(/[{}\[\]"'`]+/g, '').replace(/\\n/g, ' ').replace(/\\/g, '').trim();
+      // Add units to 'yield' and 'next season' recommendations in answer
+      answer = answer.replace(/(yield:?\s*)(\d+(\.\d+)?)/gi, '$1$2 tons/acre');
+      answer = answer.replace(/(plant next season:?\s*)([\w\s]+)(\d+(\.\d+)?)/gi, (m, p1, p2, p3) => `${p1}${p2}${p3} acres`);
+      // Remove any curly braces, quotes, brackets, and single quotes left
+      answer = answer.replace(/[{}\[\]"'`]+/g, '').replace(/\\n/g, ' ').replace(/\\/g, '').trim();
     }
     res.json({ answer, context: context.map(c => ({ id: c.id, score: c.score })) });
   } catch (err) {
