@@ -4,7 +4,7 @@ import { TrendingUp, CloudRain, DollarSign, AlertTriangle, Settings, Download } 
 import { jsPDF } from 'jspdf';
 import './dashboard.css';
 import './brand.css';
-// import LogoHeader from './components/LogoHeader.jsx';
+import LogoHeader from './components/LogoHeader.jsx';
 import AIAdvisor from './components/AIAdvisor.jsx';
 import CarbonCreditCalculator from './components/CarbonCreditCalculator.jsx';
 
@@ -308,7 +308,7 @@ const PlantProfitDashboard = () => {
 
   return (
     <>
-  {/* LogoHeader removed */}
+      <LogoHeader />
       <div className="app-root">
         <div className="container">
           <div className="card">
