@@ -118,7 +118,7 @@ export default function AIAdvisor() {
   };
 
   return (
-    <div style={{ fontFamily: 'Inter, Helvetica Neue, Arial, sans-serif', color: '#222', fontSize: 15, lineHeight: 1.6 }}>
+    <div style={{ fontFamily: 'Inter, Helvetica Neue, Arial, sans-serif', color: 'var(--text-primary)', fontSize: 15, lineHeight: 1.6 }}>
       <div className="card">
         <h3 style={{ fontSize: 16, fontWeight: 700 }}>Onboard Farm / Build Model</h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 8 }}>
@@ -146,12 +146,10 @@ export default function AIAdvisor() {
           </div>
         </div>
         {modelError && (
-          <div style={{ marginTop: 8, color: '#b91c1c', background: '#fff1f2', padding: 8, borderRadius: 6 }}>
-            <strong>Error:</strong> {modelError}
-          </div>
+          <div className="alert alert-warning">{modelError}</div>
         )}
         {healthStatus && (
-          <div style={{ marginTop: 8, padding: 8, borderRadius: 6, background: healthStatus.ok ? '#ecfdf5' : '#fff1f2', color: healthStatus.ok ? '#065f46' : '#7f1d1d' }}>
+          <div className={healthStatus.ok ? "alert alert-success" : "alert alert-warning"}>
             {healthStatus.ok ? (
               <div>API reachable — pid: {healthStatus.info.pid} — timestamp: {new Date(healthStatus.info.timestamp).toLocaleString()}</div>
             ) : (
@@ -164,17 +162,10 @@ export default function AIAdvisor() {
             <h4 style={{ marginBottom: 8 }}>Estimated Model</h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
               {model.map((m) => (
-                <div key={m.key} style={{ padding: 10, borderRadius: 8, background: '#fbfbfe', border: '1px solid #eef2f7' }}>
+                                <div key={m.key} className="metric-section">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                     <div style={{ fontWeight: 700 }}>{m.label}</div>
-                    <div style={{ fontSize: 12, color: 'var(--muted)' }}>{m.type}</div>
-                  </div>
-                  <div style={{ marginTop: 8, fontSize: 13 }}>
-                    <div>Yield (per acre): <strong>{m.estimatedYield}</strong></div>
-                    <div>Price: <strong>${m.estPrice}</strong> · Costs: <strong>${m.estCosts}</strong></div>
-                    <div>Revenue / acre: <strong>{m.revenuePerAcreFormatted}</strong></div>
-                    <div>Profit / acre: <strong style={{ color: m.profitable ? '#065f46' : '#b91c1c' }}>{m.profitPerAcreFormatted}</strong></div>
-                    {m.description && <div style={{ marginTop: 6, color: 'var(--muted)', fontSize: 12 }}>{m.description}</div>}
+                    <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>{m.value}</div>
                   </div>
                 </div>
               ))}
@@ -224,35 +215,35 @@ export default function AIAdvisor() {
               {Array.isArray(optResult.allocation) && optResult.allocation.length > 0 ? (
                 <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 12 }}>
                   <thead>
-                    <tr style={{ background: '#f3f4f6' }}>
-                      <th style={{ textAlign: 'left', padding: '6px 10px', borderBottom: '1px solid #e5e7eb' }}>Crop</th>
-                      <th style={{ textAlign: 'right', padding: '6px 10px', borderBottom: '1px solid #e5e7eb' }}>Acres</th>
-                      <th style={{ textAlign: 'right', padding: '6px 10px', borderBottom: '1px solid #e5e7eb' }}>Profit/Acre</th>
+                    <tr style={{ background: 'var(--card)' }}>
+                      <th style={{ textAlign: 'left', padding: '6px 10px', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>Crop</th>
+                      <th style={{ textAlign: 'right', padding: '6px 10px', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>Acres</th>
+                      <th style={{ textAlign: 'right', padding: '6px 10px', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>Profit/Acre</th>
                     </tr>
                   </thead>
                   <tbody>
                     {optResult.allocation.map((row) => (
                       <tr key={row.key}>
-                        <td style={{ padding: '6px 10px', borderBottom: '1px solid #f1f5f9' }}>{row.key}</td>
-                        <td style={{ padding: '6px 10px', textAlign: 'right', borderBottom: '1px solid #f1f5f9' }}>{row.acres}</td>
-                        <td style={{ padding: '6px 10px', textAlign: 'right', borderBottom: '1px solid #f1f5f9' }}>${Math.round(row.profitPerAcre).toLocaleString()}</td>
+                        <td style={{ padding: '6px 10px', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>{row.key}</td>
+                        <td style={{ padding: '6px 10px', textAlign: 'right', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>{row.acres}</td>
+                        <td style={{ padding: '6px 10px', textAlign: 'right', borderBottom: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>${Math.round(row.profitPerAcre).toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               ) : (
-                <div style={{ color: '#b91c1c', marginBottom: 12 }}>No allocation data returned.</div>
+                <div style={{ color: 'var(--warning)', marginBottom: 12 }}>No allocation data returned.</div>
               )}
               {typeof optResult.totalProfit === 'number' && !isNaN(optResult.totalProfit) && (
                 <>
                   <h4 style={{ marginTop: 16, marginBottom: 4 }}>Estimated Profit</h4>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: '#065f46', marginBottom: 12 }}>${Math.round(optResult.totalProfit).toLocaleString()}</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent)', marginBottom: 12 }}>${Math.round(optResult.totalProfit).toLocaleString()}</div>
                 </>
               )}
               {optResult.explanation && (
                 <>
                   <h4 style={{ marginTop: 16, marginBottom: 4 }}>AI Explanation</h4>
-                  <div style={{ whiteSpace: 'pre-wrap', background: '#f8fafc', borderRadius: 6, padding: 10, color: '#334155' }}>
+                  <div style={{ whiteSpace: 'pre-wrap', background: 'var(--card)', borderRadius: 6, padding: 10, color: 'var(--text-secondary)', border: '1px solid var(--border-color)' }}>
                     {(() => {
                       try {
                         const parsed = JSON.parse(optResult.explanation);

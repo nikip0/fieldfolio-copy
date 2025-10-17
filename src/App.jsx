@@ -511,7 +511,7 @@ const PlantProfitDashboard = () => {
                       <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{crop.metrics.riskScore}/100</span>
                     </div>
                     <div className="risk-bar">
-                      <i style={{ width: `${crop.metrics.riskScore}%`, background: crop.metrics.riskScore < 30 ? '#16a34a' : crop.metrics.riskScore < 60 ? '#f59e0b' : '#ef4444' }} />
+                      <i style={{ width: `${crop.metrics.riskScore}%`, background: crop.metrics.riskScore < 30 ? 'var(--accent)' : crop.metrics.riskScore < 60 ? 'var(--warning)' : 'var(--danger)' }} />
                     </div>
                   </div>
                 </div>

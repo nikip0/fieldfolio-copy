@@ -6,6 +6,7 @@
   --accent: #16a34a; /* green-600 */
   --accent-2: #2563eb; /* blue-600 */
   --warning: #d97706; /* amber-600 */
+  --danger: #ef4444; /* red-500 */
   --glass: rgba(255,255,255,0.6);
   --radius-lg: 16px;
   --radius-md: 10px;
@@ -24,6 +25,7 @@
     --card: #1e293b;
     --muted: #94a3b8;
     --warning: #f59e0b; /* amber-500 for better dark mode visibility */
+    --danger: #f87171; /* red-400 for better dark mode visibility */
     --glass: rgba(30,41,59,0.8);
     --shadow-md: 0 6px 20px rgba(0,0,0,0.3);
     --shadow-lg: 0 10px 30px rgba(0,0,0,0.4);
@@ -281,10 +283,26 @@
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 .btn-primary:disabled {
-  background: var(--text-secondary);
+  opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+  background: var(--muted);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 160ms ease;
+}
+
+.btn-ghost:hover {
+  background: var(--card);
+  color: var(--text-primary);
+  border-color: var(--accent);
 }
 
 .badge {

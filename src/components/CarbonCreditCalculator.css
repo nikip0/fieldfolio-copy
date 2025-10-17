@@ -1,15 +1,16 @@
 .carbon-credit-calculator {
-  background: #f8fafc;
+  background: var(--card);
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  box-shadow: var(--shadow-md);
   padding: 2rem;
   max-width: 420px;
   margin: 2rem auto;
   font-family: 'Inter', Arial, sans-serif;
+  border: 1px solid var(--border-color);
 }
 .carbon-credit-calculator h2 {
   margin-bottom: 1.2rem;
-  color: #1a3a2d;
+  color: var(--text-primary);
   font-size: 1.7rem;
 }
 .ccc-form {
@@ -19,20 +20,21 @@
 }
 .ccc-form label {
   font-weight: 500;
-  color: #2c4f3b;
+  color: var(--text-secondary);
 }
 .ccc-form input,
 .ccc-form select {
   margin-top: 0.3rem;
   padding: 0.5rem;
   border-radius: 6px;
-  border: 1px solid #cce3d6;
+  border: 1px solid var(--border-color);
   font-size: 1rem;
-  background: #fff;
+  background: var(--card);
+  color: var(--text-primary);
 }
 .ccc-form button {
-  background: #2c4f3b;
-  color: #fff;
+  background: var(--accent);
+  color: white;
   border: none;
   border-radius: 6px;
   padding: 0.7rem 1.2rem;
@@ -42,26 +44,28 @@
   transition: background 0.2s;
 }
 .ccc-form button:hover {
-  background: #1a3a2d;
+  background: var(--accent);
+  opacity: 0.9;
 }
 .ccc-result {
   margin-top: 2rem;
-  background: #eaf7f0;
+  background: var(--card);
   border-radius: 8px;
   padding: 1.2rem;
-  color: #1a3a2d;
-  box-shadow: 0 1px 6px rgba(44,79,59,0.07);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 .ccc-error {
-  color: #c0392b;
+  color: var(--warning);
   font-weight: bold;
 }
 .ccc-dollars {
-  color: #2c4f3b;
+  color: var(--accent);
   font-weight: 600;
 }
 .ccc-esg {
   margin-top: 1rem;
   font-style: italic;
-  color: #3e6b4c;
+  color: var(--text-secondary);
 }
