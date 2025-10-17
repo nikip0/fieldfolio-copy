@@ -800,19 +800,6 @@ const PlantProfitDashboard = () => {
           </div>
         )}
 
-        <div className="card" style={{ marginTop: 16 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>Download Advisory Report</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Share with lenders, cooperatives, or partners</p>
-            </div>
-            <button onClick={downloadReport} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Download size={18} />
-              Download PDF Report
-            </button>
-          </div>
-        </div>
-
         {/* AI Advisor onboarding & chat */}
         <div style={{ marginTop: 16 }}>
           <AIAdvisor />
