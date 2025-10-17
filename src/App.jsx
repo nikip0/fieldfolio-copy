@@ -341,12 +341,12 @@ const PlantProfitDashboard = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div />
               <div style={{ textAlign: 'right' }}>
-                <div style={{ color: 'var(--muted)', fontSize: 13 }}>Current Season Outlook</div>
+                <div style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Current Season Outlook</div>
               <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--accent)' }}>2025 Spring</div>
             </div>
           </div>
 
-          <div style={{ marginTop: 18, paddingTop: 18, borderTop: '1px solid #eef2f7' }}>
+          <div style={{ marginTop: 18, paddingTop: 18, borderTop: '1px solid var(--border-color)' }}>
             <div className="segmented">
               <button onClick={() => setModeAndData('annual')} className={cropMode === 'annual' ? 'active' : ''}>
                 <div>Annual Crops</div>
@@ -359,20 +359,20 @@ const PlantProfitDashboard = () => {
             </div>
           </div>
 
-          <div style={{ marginTop: 18, paddingTop: 18, borderTop: '1px solid #eef2f7' }}>
+          <div style={{ marginTop: 18, paddingTop: 18, borderTop: '1px solid var(--border-color)' }}>
             <div className="input-group">
               <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', marginBottom: 6, color: 'var(--muted)', fontSize: 13 }}>
+                <label style={{ display: 'block', marginBottom: 6, color: 'var(--text-secondary)', fontSize: 13 }}>
                   USDA NASS API Key (optional - loads live county data)
                 </label>
                 <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="Enter your API key..." />
               </div>
               <div style={{ marginTop: 8 }}>
-                <label style={{ fontSize: 13, marginRight: 8 }}>County:</label>
+                <label style={{ fontSize: 13, marginRight: 8, color: 'var(--text-secondary)' }}>County:</label>
                 <input type="text" value={county} onChange={e => setCounty(e.target.value)} style={{ marginRight: 12 }} />
-                <label style={{ fontSize: 13, marginRight: 8 }}>State:</label>
+                <label style={{ fontSize: 13, marginRight: 8, color: 'var(--text-secondary)' }}>State:</label>
                 <input type="text" value={stateAlpha} onChange={e => setStateAlpha(e.target.value)} style={{ width: 40, marginRight: 12 }} />
-                <label style={{ fontSize: 13, marginRight: 8 }}>Commodity:</label>
+                <label style={{ fontSize: 13, marginRight: 8, color: 'var(--text-secondary)' }}>Commodity:</label>
                 <input type="text" value={commodity} onChange={e => setCommodity(e.target.value)} style={{ marginRight: 12 }} />
               </div>
               <button onClick={fetchUSDAData} disabled={isLoading || !apiKey} className="btn-primary">
@@ -381,7 +381,7 @@ const PlantProfitDashboard = () => {
             </div>
 
             {error && (
-              <div style={{ marginTop: 8, fontSize: 13, padding: '8px 12px', borderRadius: 10, background: error.includes('\u2705') ? '#ecfdf5' : '#fff7ed', color: error.includes('\u2705') ? '#065f46' : '#92400e' }}>
+              <div className={`alert ${error.includes('✅') ? 'alert-success' : 'alert-warning'}`}>
                 {error}
               </div>
             )}
@@ -413,7 +413,7 @@ const PlantProfitDashboard = () => {
               </div>
               <div className="metric">
                 <div className="label">Rainfall Anomaly</div>
-                <div className="value" style={{ color: parseFloat(weatherData.rainfallAnomaly) > 0 ? 'var(--accent)' : '#d97706' }}>{weatherData.rainfallAnomaly}%</div>
+                <div className="value" style={{ color: parseFloat(weatherData.rainfallAnomaly) > 0 ? 'var(--accent)' : 'var(--warning)' }}>{weatherData.rainfallAnomaly}%</div>
               </div>
               <div className="metric">
                 <div className="label">Avg Temperature (30d)</div>
@@ -424,91 +424,91 @@ const PlantProfitDashboard = () => {
         )}
 
         <div className="card" style={{ marginTop: 16 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Settings className="text-gray-600" /> Scenario Planning
+          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-primary)' }}>
+            <Settings style={{ color: 'var(--text-secondary)' }} /> Scenario Planning
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 8, color: 'var(--muted)' }}>Price Change: {priceScenario > 0 ? '+' : ''}{priceScenario}%</label>
+              <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)' }}>Price Change: {priceScenario > 0 ? '+' : ''}{priceScenario}%</label>
               <input type="range" min="-30" max="30" value={priceScenario} onChange={(e) => setPriceScenario(parseInt(e.target.value))} style={{ width: '100%' }} />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 8, color: 'var(--muted)' }}>Input Cost Change: {costScenario > 0 ? '+' : ''}{costScenario}%</label>
+              <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)' }}>Input Cost Change: {costScenario > 0 ? '+' : ''}{costScenario}%</label>
               <input type="range" min="-20" max="40" value={costScenario} onChange={(e) => setCostScenario(parseInt(e.target.value))} style={{ width: '100%' }} />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 8, color: 'var(--muted)' }}>Rainfall Change: {rainfallScenario > 0 ? '+' : ''}{rainfallScenario}%</label>
+              <label style={{ display: 'block', marginBottom: 8, color: 'var(--text-secondary)' }}>Rainfall Change: {rainfallScenario > 0 ? '+' : ''}{rainfallScenario}%</label>
               <input type="range" min="-40" max="40" value={rainfallScenario} onChange={(e) => setRainfallScenario(parseInt(e.target.value))} style={{ width: '100%' }} />
             </div>
           </div>
         </div>
 
         <div style={{ marginTop: 18 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>{cropMode === 'annual' ? 'What to Plant Next Season' : 'Orchard Investment & Revenue Outlook'}</h2>
-          <p style={{ color: 'var(--muted)', marginBottom: 12 }}>{cropMode === 'annual' ? 'Annual crops - replanted each season. Choose based on expected profit for 2025 harvest.' : 'Perennial orchards - multi-year investment. Focus on long-term ROI and current price outlook.'}</p>
+          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)' }}>{cropMode === 'annual' ? 'What to Plant Next Season' : 'Orchard Investment & Revenue Outlook'}</h2>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: 12 }}>{cropMode === 'annual' ? 'Annual crops - replanted each season. Choose based on expected profit for 2025 harvest.' : 'Perennial orchards - multi-year investment. Focus on long-term ROI and current price outlook.'}</p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
             {rankedCrops.map((crop, index) => (
               <div key={crop.key} className="card" style={{ transition: 'box-shadow 160ms' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                   <div>
-                    <div style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 700, textTransform: 'uppercase' }}>Rank #{index + 1}</div>
-                    <h3 style={{ fontSize: 18, fontWeight: 700 }}>{crop.name}</h3>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase' }}>Rank #{index + 1}</div>
+                    <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>{crop.name}</h3>
                   </div>
-                  <div className="badge" style={{ background: index === 0 ? '#ecfdf5' : index === 1 ? '#eef2ff' : '#f3f4f6', color: index === 0 ? '#065f46' : index === 1 ? '#1e40af' : '#374151' }}>{index === 0 ? 'Best Choice' : index === 1 ? 'Good' : 'Consider'}</div>
+                  <div className={`badge ${index === 0 ? 'crop-badge-best' : index === 1 ? 'crop-badge-good' : 'crop-badge-consider'}`}>{index === 0 ? 'Best Choice' : index === 1 ? 'Good' : 'Consider'}</div>
                 </div>
 
                 <div style={{ display: 'grid', gap: 8 }}>
-                  <div style={{ background: '#f0fdf4', borderRadius: 10, padding: 12 }}>
-                    <div style={{ color: 'var(--muted)', fontSize: 13 }}>{crop.type === 'annual' ? 'Expected Profit/Acre' : 'Annual Revenue/Acre'}</div>
+                  <div className="profit-section">
+                    <div style={{ color: 'var(--text-secondary)', fontSize: 13 }}>{crop.type === 'annual' ? 'Expected Profit/Acre' : 'Annual Revenue/Acre'}</div>
                     <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)' }}>${parseFloat(crop.metrics.profit).toLocaleString()}</div>
                   </div>
 
                   {crop.type === 'perennial' && (
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                      <div style={{ background: '#eff6ff', borderRadius: 8, padding: 8 }}>
-                        <div style={{ fontSize: 12, color: 'var(--muted)' }}>ROI (Annual)</div>
+                      <div className="roi-section">
+                        <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>ROI (Annual)</div>
                         <div style={{ fontWeight: 700, color: 'var(--accent-2)' }}>{crop.metrics.roi}%</div>
                       </div>
-                      <div style={{ background: '#faf5ff', borderRadius: 8, padding: 8 }}>
-                        <div style={{ fontSize: 12, color: 'var(--muted)' }}>Break-even</div>
-                        <div style={{ fontWeight: 700, color: '#6b21a8' }}>{crop.metrics.breakEven} yrs</div>
+                      <div className="breakeven-section">
+                        <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Break-even</div>
+                        <div className="breakeven-text" style={{ fontWeight: 700 }}>{crop.metrics.breakEven} yrs</div>
                       </div>
                     </div>
                   )}
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 14 }}>
-                    <div style={{ background: '#f8fafc', borderRadius: 8, padding: 8 }}>
-                      <div style={{ color: 'var(--muted)', fontSize: 12 }}>Yield</div>
-                      <div style={{ fontWeight: 700 }}>{crop.metrics.yield}</div>
+                    <div className="metric-section">
+                      <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Yield</div>
+                      <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{crop.metrics.yield}</div>
                     </div>
-                    <div style={{ background: '#f8fafc', borderRadius: 8, padding: 8 }}>
-                      <div style={{ color: 'var(--muted)', fontSize: 12 }}>Price</div>
-                      <div style={{ fontWeight: 700 }}>${crop.metrics.price}</div>
+                    <div className="metric-section">
+                      <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Price</div>
+                      <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>${crop.metrics.price}</div>
                     </div>
-                    <div style={{ background: '#f8fafc', borderRadius: 8, padding: 8 }}>
-                      <div style={{ color: 'var(--muted)', fontSize: 12 }}>Revenue</div>
-                      <div style={{ fontWeight: 700 }}>${parseFloat(crop.metrics.revenue).toLocaleString()}</div>
+                    <div className="metric-section">
+                      <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Revenue</div>
+                      <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>${parseFloat(crop.metrics.revenue).toLocaleString()}</div>
                     </div>
-                    <div style={{ background: '#f8fafc', borderRadius: 8, padding: 8 }}>
-                      <div style={{ color: 'var(--muted)', fontSize: 12 }}>Annual Costs</div>
-                      <div style={{ fontWeight: 700 }}>${parseFloat(crop.metrics.costs).toLocaleString()}</div>
+                    <div className="metric-section">
+                      <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>Annual Costs</div>
+                      <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>${parseFloat(crop.metrics.costs).toLocaleString()}</div>
                     </div>
                   </div>
 
                   {crop.type === 'perennial' && (
-                    <div style={{ background: '#fff7ed', borderRadius: 8, padding: 10, fontSize: 13 }}>
-                      <div style={{ fontWeight: 700, color: '#92400e' }}>Establishment: ${crop.establishmentCost.toLocaleString()}</div>
-                      <div style={{ color: '#92400e' }}>{crop.yearsToProduction} years to first production</div>
+                    <div className="establishment-section">
+                      <div className="establishment-text" style={{ fontWeight: 700 }}>Establishment: ${crop.establishmentCost.toLocaleString()}</div>
+                      <div className="establishment-text">{crop.yearsToProduction} years to first production</div>
                     </div>
                   )}
 
-                  <div style={{ fontSize: 13, color: 'var(--muted)', fontStyle: 'italic' }}>{crop.description}</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', fontStyle: 'italic' }}>{crop.description}</div>
 
                   <div style={{ marginTop: 8 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                      <span style={{ color: 'var(--muted)' }}>Risk Score</span>
-                      <span style={{ fontWeight: 700 }}>{crop.metrics.riskScore}/100</span>
+                      <span style={{ color: 'var(--text-secondary)' }}>Risk Score</span>
+                      <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{crop.metrics.riskScore}/100</span>
                     </div>
                     <div className="risk-bar">
                       <i style={{ width: `${crop.metrics.riskScore}%`, background: crop.metrics.riskScore < 30 ? '#16a34a' : crop.metrics.riskScore < 60 ? '#f59e0b' : '#ef4444' }} />
@@ -523,7 +523,7 @@ const PlantProfitDashboard = () => {
         {rankedCrops[0] && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 16 }}>
             <div className="card">
-              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12 }}>{rankedCrops[0].name} - Yield History</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)' }}>{rankedCrops[0].name} - Yield History</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={rankedCrops[0].yieldHistory.map((y, i) => ({ year: 2018 + i, yield: y }))}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -536,7 +536,7 @@ const PlantProfitDashboard = () => {
             </div>
 
             <div className="card">
-              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12 }}>{rankedCrops[0].name} - Price History</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)' }}>{rankedCrops[0].name} - Price History</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={rankedCrops[0].priceHistory.map((p, i) => ({ year: 2018 + i, price: p }))}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -553,8 +553,8 @@ const PlantProfitDashboard = () => {
         <div className="card" style={{ marginTop: 16 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <h3 style={{ fontSize: 16, fontWeight: 700 }}>Download Advisory Report</h3>
-              <p style={{ color: 'var(--muted)', fontSize: 13 }}>Share with lenders, cooperatives, or partners</p>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>Download Advisory Report</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Share with lenders, cooperatives, or partners</p>
             </div>
             <button onClick={downloadReport} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Download size={18} />

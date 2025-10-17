@@ -5,6 +5,7 @@
   --muted: #6b7280;
   --accent: #16a34a; /* green-600 */
   --accent-2: #2563eb; /* blue-600 */
+  --warning: #d97706; /* amber-600 */
   --glass: rgba(255,255,255,0.6);
   --radius-lg: 16px;
   --radius-md: 10px;
@@ -22,6 +23,7 @@
     --bg: #0f172a;
     --card: #1e293b;
     --muted: #94a3b8;
+    --warning: #f59e0b; /* amber-500 for better dark mode visibility */
     --glass: rgba(30,41,59,0.8);
     --shadow-md: 0 6px 20px rgba(0,0,0,0.3);
     --shadow-lg: 0 10px 30px rgba(0,0,0,0.4);
@@ -335,6 +337,192 @@
   color: var(--text-secondary); 
   margin-top: 18px; 
   font-size: 13px; 
+}
+
+/* Alert styles */
+.alert {
+  margin-top: 8px;
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+.alert-success {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.alert-warning {
+  background: #fff7ed;
+  color: #92400e;
+  border: 1px solid #fed7aa;
+}
+
+/* Dark mode alert styles */
+@media (prefers-color-scheme: dark) {
+  .alert-success {
+    background: #064e3b;
+    color: #a7f3d0;
+    border: 1px solid #047857;
+  }
+  
+  .alert-warning {
+    background: #451a03;
+    color: #fed7aa;
+    border: 1px solid #92400e;
+  }
+}
+
+/* Crop cards and badges */
+.crop-badge-best {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.crop-badge-good {
+  background: #eef2ff;
+  color: #1e40af;
+}
+
+.crop-badge-consider {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.profit-section {
+  background: #f0fdf4;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.roi-section {
+  background: #eff6ff;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.breakeven-section {
+  background: #faf5ff;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.metric-section {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.establishment-section {
+  background: #fff7ed;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 13px;
+}
+
+.establishment-text {
+  color: #92400e;
+}
+
+.breakeven-text {
+  color: #6b21a8;
+}
+
+/* Dark mode crop sections */
+@media (prefers-color-scheme: dark) {
+  .crop-badge-best {
+    background: #064e3b;
+    color: #a7f3d0;
+  }
+
+  .crop-badge-good {
+    background: #1e3a8a;
+    color: #dbeafe;
+  }
+
+  .crop-badge-consider {
+    background: #374151;
+    color: #d1d5db;
+  }
+
+  .profit-section {
+    background: #064e3b;
+  }
+
+  .roi-section {
+    background: #1e3a8a;
+  }
+
+  .breakeven-section {
+    background: #581c87;
+  }
+
+  .metric-section {
+    background: var(--card);
+    border: 1px solid var(--border-color);
+  }
+
+  .establishment-section {
+    background: #451a03;
+  }
+
+  .establishment-text {
+    color: #fed7aa;
+  }
+
+  .breakeven-text {
+    color: #c4b5fd;
+  }
+}
+
+/* Range input styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: var(--border-color);
+  border-radius: 3px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Chart dark mode support */
+@media (prefers-color-scheme: dark) {
+  .recharts-cartesian-grid-horizontal line,
+  .recharts-cartesian-grid-vertical line {
+    stroke: var(--border-color);
+  }
+  
+  .recharts-text {
+    fill: var(--text-secondary);
+  }
+  
+  .recharts-tooltip-wrapper {
+    background: var(--card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+  }
 }
 
 @media (max-width: 900px) {
