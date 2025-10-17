@@ -541,19 +541,6 @@ const PlantProfitDashboard = () => {
           </div>
         </div>
 
-        {/* AI Advisor onboarding & chat */}
-        <div style={{ marginTop: 16 }}>
-          <AIAdvisor />
-        </div>
-        
-        {/* Carbon Credit Calculator */}
-        <div className="card" style={{ marginTop: 16 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <DollarSign className="text-green-500" /> Carbon Credit Calculator
-          </h2>
-          <CarbonCreditCalculator />
-        </div>
-
         {weatherData && (
           <div className="card" style={{ marginTop: 16 }}>
             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -824,6 +811,19 @@ const PlantProfitDashboard = () => {
               Download PDF Report
             </button>
           </div>
+        </div>
+
+        {/* AI Advisor onboarding & chat */}
+        <div style={{ marginTop: 16 }}>
+          <AIAdvisor />
+        </div>
+
+        {/* Carbon Credit Calculator */}
+        <div className="card" style={{ marginTop: 16 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <DollarSign className="text-green-500" /> Carbon Credit Calculator
+          </h2>
+          <CarbonCreditCalculator />
         </div>
 
         <div className="footer-note">Data sources: USDA NASS (county yields) • Open-Meteo (weather) • Live updated {new Date().toLocaleDateString()}</div>
